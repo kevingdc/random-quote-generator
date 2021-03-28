@@ -3,6 +3,7 @@ import quoteHelper from "../api/quoteHelper.js";
 import Quote from "./Quote.js";
 import NewQuoteButton from "./NewQuoteButton.js";
 import SocialAnchor from "./SocialAnchor.js";
+import LoadingSpinner from "./LoadingSpinner.js";
 
 import twitterLogo from "../assets/twitter-logo.svg";
 class QuoteBox extends React.Component {
@@ -12,6 +13,7 @@ class QuoteBox extends React.Component {
     this.state = {
       quote: "",
       author: "",
+      fetching: false,
     };
 
     this.fetchQuote = this.fetchQuote.bind(this);
@@ -26,23 +28,32 @@ class QuoteBox extends React.Component {
   }
 
   fetchQuote() {
+    this.setState({ fetching: true });
     quoteHelper.fetchQuote().then(res => {
-      this.setState({ quote: res.content, author: res.author });
+      this.setState({
+        quote: res.content,
+        author: res.author,
+        fetching: false,
+      });
     });
   }
 
   render() {
-    const { quote, author } = this.state;
+    const { quote, author, fetching } = this.state;
     const tweetURL = `https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=${encodeURIComponent(
       quote
     )}${encodeURIComponent(author)}`;
     return (
       <div
         id="quote-box"
-        className="w-1/2 flex-shrink flex flex-col space-y-10 shadow-md rounded-md bg-white border-white border-2 p-6"
+        className="w-1/2 flex-shrink flex flex-col items-center space-y-10 shadow-md rounded-md bg-white border-white border-2 p-6"
       >
-        <Quote quote={quote} author={author} />
-        <div className="flex justify-between">
+        {fetching ? (
+          <LoadingSpinner />
+        ) : (
+          <Quote quote={quote} author={author} />
+        )}
+        <div className="w-full flex justify-between">
           <SocialAnchor id="tweet-quote" href={tweetURL}>
             <img src={twitterLogo} alt="Twitter" className="w-5 h-5" />
           </SocialAnchor>
