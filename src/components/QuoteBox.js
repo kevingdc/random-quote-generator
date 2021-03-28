@@ -1,6 +1,7 @@
 import React from "react";
 import quoteHelper from "../api/quoteHelper.js";
 import Quote from "./Quote.js";
+import NewQuoteButton from "./NewQuoteButton.js";
 class QuoteBox extends React.Component {
   constructor(props) {
     super(props);
@@ -9,6 +10,8 @@ class QuoteBox extends React.Component {
       quote: "",
       author: "",
     };
+
+    this.fetchQuote = this.fetchQuote.bind(this);
   }
 
   componentDidMount() {
@@ -16,6 +19,10 @@ class QuoteBox extends React.Component {
 
     if (quote && author) return;
 
+    this.fetchQuote();
+  }
+
+  fetchQuote() {
     quoteHelper.fetchQuote().then(res => {
       this.setState({ quote: res.content, author: res.author });
     });
@@ -26,9 +33,12 @@ class QuoteBox extends React.Component {
     return (
       <div
         id="quote-box"
-        className="w-1/3 h-1/3 flex shadow-md rounded-md bg-white border-white border-2 p-6"
+        className="w-1/2 flex-shrink flex flex-col space-y-10 shadow-md rounded-md bg-white border-white border-2 p-6"
       >
         <Quote quote={quote} author={author} />
+        <div className="flex justify-end">
+          <NewQuoteButton onClick={this.fetchQuote} />
+        </div>
       </div>
     );
   }
