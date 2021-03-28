@@ -1,9 +1,9 @@
+import QuoteBox from "../components/QuoteBox.js";
+
 const App = () => {
   return (
-    <div className="flex h-screen">
-      <div className="m-auto">
-        <p className="text-6xl">Hello World</p>
-      </div>
+    <div className="flex h-screen justify-center items-center bg-gradient-to-br from-gray-100 to-gray-500">
+      <QuoteBox />
     </div>
   );
 };
